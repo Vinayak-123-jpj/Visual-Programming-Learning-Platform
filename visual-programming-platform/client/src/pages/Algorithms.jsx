@@ -1,6 +1,166 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
 // ============================================================
+// ALGORITHM INTRO CONTENT
+// ============================================================
+const ALGO_INTROS = {
+  bubble: {
+    title: "Bubble Sort",
+    emoji: "🫧",
+    tagline: "The simplest sorting algorithm",
+    what: "Bubble Sort compares two neighboring elements at a time and swaps them if they're in the wrong order. It keeps doing this until no swaps are needed — meaning the array is sorted!",
+    analogy:
+      "🃏 Imagine you have a row of playing cards face-up. You look at each pair side-by-side and swap them if the left one is bigger. You keep doing full passes until everything is in order.",
+    steps: [
+      "Start from the beginning of the array",
+      "Compare the first two elements",
+      "If the left is bigger than the right → swap them!",
+      "Move to the next pair and repeat",
+      "After each full pass, the largest unsorted element 'bubbles' to the end",
+      "Keep going until no swaps happen in a full pass",
+    ],
+    complexity: { time: "O(n²)", space: "O(1)", best: "O(n)", stable: "Yes" },
+    tip: "Best for: small arrays or teaching concepts. Not ideal for large datasets.",
+  },
+  selection: {
+    title: "Selection Sort",
+    emoji: "🎯",
+    tagline: "Always pick the smallest",
+    what: "Selection Sort finds the minimum element from the unsorted portion and puts it at the beginning. It selects the right element for each position, one at a time.",
+    analogy:
+      "🏆 Imagine organizing a race result list. You scan all participants, find the winner (smallest time), put them first. Then scan remaining participants for 2nd place, and so on.",
+    steps: [
+      "Find the smallest element in the entire array",
+      "Swap it with the element at position 0",
+      "Now find the smallest in the remaining (positions 1 to end)",
+      "Swap it with position 1",
+      "Repeat until the array is sorted",
+    ],
+    complexity: { time: "O(n²)", space: "O(1)", best: "O(n²)", stable: "No" },
+    tip: "Best for: when memory writes are expensive (it makes fewest swaps). Still slow for large arrays.",
+  },
+  insertion: {
+    title: "Insertion Sort",
+    emoji: "🃏",
+    tagline: "Build a sorted hand, card by card",
+    what: "Insertion Sort builds a sorted portion one element at a time. It takes each new element and inserts it into the correct position among the already-sorted elements.",
+    analogy:
+      "🎮 Think of sorting playing cards in your hand. You pick up a new card and slide it into the right spot among the cards you're already holding.",
+    steps: [
+      "Start with the second element (first is 'sorted' by itself)",
+      "Pick the current element (call it 'key')",
+      "Compare it with elements to its left",
+      "Shift larger elements one position to the right",
+      "Insert the key into its correct position",
+      "Repeat for each remaining element",
+    ],
+    complexity: { time: "O(n²)", space: "O(1)", best: "O(n)", stable: "Yes" },
+    tip: "Best for: nearly-sorted arrays or small datasets. Very efficient when few elements are out of place!",
+  },
+  merge: {
+    title: "Merge Sort",
+    emoji: "🔀",
+    tagline: "Divide, sort, and conquer",
+    what: "Merge Sort uses a 'divide and conquer' strategy. It splits the array in half recursively until each piece has 1 element, then merges the pieces back together in sorted order.",
+    analogy:
+      "📚 Imagine sorting two sorted stacks of exam papers by name. You compare the top of each stack and pick the alphabetically-first one repeatedly. That's the merge step!",
+    steps: [
+      "Split the array in half",
+      "Recursively sort each half",
+      "Merge the two sorted halves back together",
+      "During merge: compare elements from each half one by one",
+      "Always pick the smaller element to go next",
+      "The result is a fully sorted array!",
+    ],
+    complexity: {
+      time: "O(n log n)",
+      space: "O(n)",
+      best: "O(n log n)",
+      stable: "Yes",
+    },
+    tip: "Best for: large datasets where performance matters. Used in most real-world sorting (like Python's built-in sort)!",
+  },
+  quick: {
+    title: "Quick Sort",
+    emoji: "⚡",
+    tagline: "Partition around a pivot",
+    what: "Quick Sort picks a 'pivot' element and partitions the array so all smaller elements go left of it and all larger go right. Then it recursively sorts each side.",
+    analogy:
+      "🗂️ Imagine sorting papers by date. Pick any paper as your 'pivot'. Put all earlier dates to the left, all later dates to the right. Now recursively sort each pile.",
+    steps: [
+      "Pick a pivot element (we use the last element)",
+      "Partition: move all elements smaller than pivot to the left",
+      "Move all elements larger than pivot to the right",
+      "Place the pivot in its correct final position",
+      "Recursively apply to the left and right sub-arrays",
+    ],
+    complexity: {
+      time: "O(n log n)",
+      space: "O(log n)",
+      best: "O(n log n)",
+      stable: "No",
+    },
+    tip: "Best for: large datasets in practice — often faster than Merge Sort despite same complexity. Used widely in real systems!",
+  },
+  binary: {
+    title: "Binary Search",
+    emoji: "🔍",
+    tagline: "Halve your search space every step",
+    what: "Binary Search finds a target value in a SORTED array super fast. It repeatedly halves the search range by comparing the middle element to the target.",
+    analogy:
+      "📖 Think of finding a word in a dictionary. You open to the middle — if your word comes before that page, search the left half. If after, search the right half. Repeat!",
+    steps: [
+      "Requires a SORTED array first!",
+      "Set left = 0, right = last index",
+      "Find the middle index: mid = (left + right) / 2",
+      "If arr[mid] == target → FOUND! 🎉",
+      "If arr[mid] < target → search the right half (left = mid + 1)",
+      "If arr[mid] > target → search the left half (right = mid - 1)",
+      "Repeat until found or left > right (not found)",
+    ],
+    complexity: { time: "O(log n)", space: "O(1)", best: "O(1)", stable: "—" },
+    tip: "Incredibly fast! Searching 1 billion elements takes at most 30 comparisons. But the array MUST be sorted first!",
+  },
+  bfs: {
+    title: "Breadth-First Search (BFS)",
+    emoji: "🌊",
+    tagline: "Explore layer by layer",
+    what: "BFS explores a graph level by level, visiting all neighbors of a node before going deeper. It uses a Queue (First In, First Out) to track which node to visit next.",
+    analogy:
+      "🎂 Imagine spreading frosting on a cake from the center outward. You first frost everything 1cm from center, then 2cm, then 3cm... BFS visits nodes at distance 1, then 2, then 3.",
+    steps: [
+      "Start at the chosen node, mark it visited",
+      "Add it to a Queue",
+      "While queue is not empty:",
+      "  → Take the FRONT node from the queue",
+      "  → Visit it and look at all its neighbors",
+      "  → For each unvisited neighbor: mark visited + add to queue",
+      "  → Repeat until queue is empty",
+    ],
+    complexity: { time: "O(V+E)", space: "O(V)", best: "O(1)", stable: "—" },
+    tip: "Use BFS when you need the SHORTEST PATH between nodes (like Google Maps). It guarantees finding the closest nodes first!",
+  },
+  dfs: {
+    title: "Depth-First Search (DFS)",
+    emoji: "🌲",
+    tagline: "Go deep before going wide",
+    what: "DFS explores as far as possible along each branch before backtracking. It uses a Stack (or recursion) to remember where it came from.",
+    analogy:
+      "🗺️ Imagine exploring a maze. You pick a direction and keep going until you hit a dead end. Then you backtrack to the last junction and try a different path.",
+    steps: [
+      "Start at the chosen node, mark it visited",
+      "Look at the first unvisited neighbor",
+      "Go to that neighbor (recursively do DFS from there)",
+      "If no unvisited neighbors → backtrack to previous node",
+      "Try the next unvisited neighbor from there",
+      "Repeat until all reachable nodes are visited",
+    ],
+    complexity: { time: "O(V+E)", space: "O(V)", best: "O(1)", stable: "—" },
+    tip: "Use DFS for: detecting cycles, topological sorting, maze solving, and checking if a graph is connected. Great for exhaustive search!",
+  },
+};
+
+// ============================================================
 // STYLES
 // ============================================================
 const STYLES = `
@@ -32,6 +192,8 @@ const STYLES = `
     flex-shrink: 0;
     position: relative;
     overflow: hidden;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .ap-header::before {
     content: '';
@@ -57,6 +219,7 @@ const STYLES = `
     gap: 4px;
     position: relative;
     z-index: 1;
+    flex-wrap: wrap;
   }
   .ap-nav-btn {
     border: none;
@@ -88,6 +251,123 @@ const STYLES = `
   }
   .ap-nav-btn.active::after { width: 70%; }
   .ap-nav-btn:hover:not(.active) { color: #9090b0; background: rgba(255,255,255,0.04); }
+
+  /* ===== INTRO MODAL OVERLAY ===== */
+  .ap-intro-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: apFadeIn 0.25s ease;
+  }
+  .ap-intro-card {
+    background: linear-gradient(145deg, #0e0e22, #111130);
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 18px;
+    padding: 28px 32px;
+    max-width: 620px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.8), 0 0 40px rgba(109,74,245,0.15);
+    animation: apSlideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .ap-intro-emoji { font-size: 48px; margin-bottom: 10px; text-align: center; }
+  .ap-intro-title { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 4px; color: #e8e8f0; }
+  .ap-intro-tagline { text-align: center; color: #a78bfa; font-size: 13px; font-family: 'Space Mono', monospace; margin-bottom: 20px; }
+  .ap-intro-section { margin-bottom: 18px; }
+  .ap-intro-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #5a5a7a; margin-bottom: 8px; font-family: 'Space Mono', monospace; }
+  .ap-intro-what { font-size: 14px; line-height: 1.7; color: #c0c0e0; }
+  .ap-intro-analogy {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-left: 3px solid #a78bfa;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #c8c8e8;
+  }
+  .ap-intro-steps { display: flex; flex-direction: column; gap: 6px; }
+  .ap-intro-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #b0b0d0;
+    line-height: 1.5;
+  }
+  .ap-intro-step-num {
+    background: rgba(167,139,250,0.2);
+    color: #a78bfa;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-family: 'Space Mono', monospace;
+  }
+  .ap-intro-complexity {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .ap-intro-complexity-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .ap-intro-complexity-label { font-size: 9px; color: #5a5a7a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
+  .ap-intro-complexity-val { font-size: 14px; font-weight: 700; color: #a78bfa; font-family: 'Space Mono', monospace; }
+  .ap-intro-tip {
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #6ee7b7;
+    line-height: 1.55;
+  }
+  .ap-intro-actions { display: flex; gap: 10px; margin-top: 22px; }
+  .ap-intro-btn-start {
+    flex: 1;
+    border: none;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #6d4af5, #4a3aff);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(109,74,245,0.45);
+    transition: all 0.18s;
+  }
+  .ap-intro-btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(109,74,245,0.6); }
+  .ap-intro-btn-skip {
+    border: 1px solid rgba(255,255,255,0.12);
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: transparent;
+    color: #7070a0;
+    transition: all 0.15s;
+  }
+  .ap-intro-btn-skip:hover { background: rgba(255,255,255,0.05); color: #a0a0c0; }
 
   /* ===== CONTROLS BAR ===== */
   .ap-controls {
@@ -130,6 +410,8 @@ const STYLES = `
   .ap-btn-ghost:disabled { opacity: 0.3; cursor: not-allowed; }
   .ap-btn-red { background: rgba(239,68,68,0.13); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
   .ap-btn-red:hover { background: rgba(239,68,68,0.2); }
+  .ap-btn-teal { background: rgba(20,184,166,0.15); color: #2dd4bf; border: 1px solid rgba(20,184,166,0.3); }
+  .ap-btn-teal:hover { background: rgba(20,184,166,0.25); }
 
   .ap-speed-ctrl {
     display: flex;
@@ -168,6 +450,45 @@ const STYLES = `
     padding: 6px 12px;
   }
 
+  /* ===== CUSTOM INPUT AREA ===== */
+  .ap-input-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 24px;
+    background: rgba(167,139,250,0.04);
+    border-bottom: 1px solid rgba(167,139,250,0.12);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .ap-input-section-label { font-size: 10px; font-weight: 700; color: #7070a0; text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; font-family: 'Space Mono', monospace; }
+  .ap-custom-input {
+    flex: 1;
+    min-width: 180px;
+    max-width: 340px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(167,139,250,0.25);
+    border-radius: 7px;
+    padding: 7px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #e8e8f0;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .ap-custom-input:focus { border-color: rgba(167,139,250,0.5); box-shadow: 0 0 0 2px rgba(167,139,250,0.08); }
+  .ap-custom-input::placeholder { color: #4a4a6a; }
+  .ap-input-hint { font-size: 10px; color: #4a4a6a; font-family: 'Space Mono', monospace; }
+  .ap-input-error { font-size: 10px; color: #f87171; font-family: 'Space Mono', monospace; padding: 4px 8px; background: rgba(239,68,68,0.08); border-radius: 5px; border: 1px solid rgba(239,68,68,0.2); }
+  .ap-input-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(167,139,250,0.12);
+    border: 1px solid rgba(167,139,250,0.25);
+    border-radius: 5px; padding: 3px 9px;
+    font-family: 'Space Mono', monospace; font-size: 11px; color: #c4b5fd;
+    font-weight: 700;
+  }
+
   /* ===== STATUS ===== */
   .ap-status-bar {
     padding: 5px 24px;
@@ -194,7 +515,7 @@ const STYLES = `
     display: grid;
     grid-template-columns: 1fr 260px;
     overflow: hidden;
-    height: calc(100vh - 140px);
+    min-height: 0;
   }
 
   /* ===== CANVAS AREA ===== */
@@ -242,7 +563,7 @@ const STYLES = `
     align-items: center;
     justify-content: flex-end;
     flex: 1;
-    max-width: 40px;
+    max-width: 56px;
     min-width: 8px;
     height: 100%;
     position: relative;
@@ -256,14 +577,13 @@ const STYLES = `
   }
   .ap-bar-val {
     font-family: 'Space Mono', monospace;
-    font-size: 8px;
-    color: rgba(255,255,255,0.4);
+    font-size: 9px;
+    color: rgba(255,255,255,0.45);
     margin-bottom: 3px;
     text-align: center;
     line-height: 1;
   }
 
-  /* bar states */
   .ap-bar.default { background: linear-gradient(180deg, #3b3b7a 0%, #252555 100%); }
   .ap-bar.comparing { background: linear-gradient(180deg, #facc15 0%, #d97706 100%); box-shadow: 0 0 12px rgba(250,204,21,0.5); }
   .ap-bar.swapping { background: linear-gradient(180deg, #f87171 0%, #dc2626 100%); box-shadow: 0 0 14px rgba(248,113,113,0.6); }
@@ -271,8 +591,6 @@ const STYLES = `
   .ap-bar.pivot { background: linear-gradient(180deg, #a78bfa 0%, #7c3aed 100%); box-shadow: 0 0 14px rgba(167,139,250,0.6); }
   .ap-bar.found { background: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%); box-shadow: 0 0 16px rgba(96,165,250,0.7); }
   .ap-bar.searching { background: linear-gradient(180deg, #fb923c 0%, #ea580c 100%); box-shadow: 0 0 10px rgba(251,146,60,0.5); }
-  .ap-bar.left { background: linear-gradient(180deg, #818cf8 0%, #4f46e5 100%); box-shadow: 0 0 10px rgba(129,140,248,0.4); }
-  .ap-bar.right { background: linear-gradient(180deg, #f472b6 0%, #db2777 100%); box-shadow: 0 0 10px rgba(244,114,182,0.4); }
 
   /* ===== BINARY SEARCH ARRAY ===== */
   .ap-bsearch-wrap {
@@ -297,8 +615,8 @@ const STYLES = `
     justify-content: center;
   }
   .ap-bs-cell {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -325,9 +643,6 @@ const STYLES = `
   .ap-bs-cell.mid { background: rgba(250,204,21,0.2); border: 2px solid rgba(250,204,21,0.6); color: #fef08a; box-shadow: 0 0 14px rgba(250,204,21,0.35); transform: scale(1.08); }
   .ap-bs-cell.found { background: rgba(52,211,153,0.25); border: 2px solid rgba(52,211,153,0.7); color: #6ee7b7; box-shadow: 0 0 18px rgba(52,211,153,0.5); transform: scale(1.15); animation: apFoundPop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
   .ap-bs-cell.eliminated { background: rgba(30,30,50,0.4); border: 1px solid rgba(60,60,90,0.3); color: #3a3a5a; }
-  .ap-bs-pointer { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 9px; font-family: 'Space Mono', monospace; }
-  .ap-bs-pointer-arrow { font-size: 12px; }
-  .ap-bs-pointers-row { display: flex; gap: 4px; }
   .ap-bs-legend { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
   .ap-bs-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #7070a0; }
   .ap-bs-legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
@@ -341,7 +656,7 @@ const STYLES = `
     padding: 8px 18px;
   }
 
-  /* ===== GRAPH (BFS/DFS) ===== */
+  /* ===== GRAPH ===== */
   .ap-graph-wrap {
     flex: 1;
     position: relative;
@@ -355,7 +670,6 @@ const STYLES = `
   .ap-graph-edge { stroke: rgba(100,100,160,0.4); stroke-width: 2; transition: stroke 0.25s, stroke-width 0.25s; }
   .ap-graph-edge.traversed { stroke: rgba(167,139,250,0.7); stroke-width: 2.5; }
   .ap-graph-edge.active { stroke: rgba(250,204,21,0.9); stroke-width: 3; filter: drop-shadow(0 0 6px rgba(250,204,21,0.6)); }
-  .ap-graph-node { cursor: default; }
   .ap-graph-node circle { transition: fill 0.25s, stroke 0.25s; }
   .ap-graph-node text { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; fill: #e8e8f0; pointer-events: none; }
   .ap-graph-node.unvisited circle { fill: #1a1a3a; stroke: rgba(100,100,160,0.5); stroke-width: 2; }
@@ -476,21 +790,21 @@ const STYLES = `
   .ap-log-item.sorted { border-left-color: #34d399; }
   .ap-log-item.found { border-left-color: #60a5fa; }
 
-  /* ===== BADGES ===== */
-  .ap-badge { display: inline-flex; align-items: center; padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; font-family: 'Space Mono', monospace; }
-  .ap-badge-purple { background: rgba(167,139,250,0.2); color: #a78bfa; }
-  .ap-badge-green { background: rgba(52,211,153,0.2); color: #34d399; }
-  .ap-badge-blue { background: rgba(96,165,250,0.2); color: #60a5fa; }
-  .ap-badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
-  .ap-badge-red { background: rgba(248,113,113,0.2); color: #f87171; }
-
-  /* ===== INPUT ROW ===== */
-  .ap-input-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+  /* ===== STEP EXPLANATION BOX ===== */
+  .ap-step-explain {
+    background: rgba(52,211,153,0.06);
+    border: 1px solid rgba(52,211,153,0.2);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 11px;
+    color: #6ee7b7;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    animation: apFadeIn 0.2s ease;
   }
+  .ap-step-explain-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #34d399; margin-bottom: 4px; opacity: 0.7; }
+
+  /* ===== INPUT ===== */
   .ap-input {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
@@ -509,64 +823,45 @@ const STYLES = `
 
   /* ===== EMPTY STATE ===== */
   .ap-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #3a3a5a; gap: 10px; }
-  .ap-empty-icon { font-size: 36px; opacity: 0.5; }
   .ap-empty-text { font-size: 12px; font-family: 'Space Mono', monospace; }
 
-  /* ===== MERGE SORT TREE ===== */
-  .ap-merge-wrap {
-    flex: 1;
-    overflow: auto;
-    padding: 12px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 12px;
-    min-height: 0;
-  }
-  .ap-merge-level { display: flex; justify-content: center; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
-  .ap-merge-arr {
-    display: flex;
-    align-items: center;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
+  /* ===== BADGE ===== */
+  .ap-badge { display: inline-flex; align-items: center; padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; font-family: 'Space Mono', monospace; }
+  .ap-badge-purple { background: rgba(167,139,250,0.2); color: #a78bfa; }
+  .ap-badge-green { background: rgba(52,211,153,0.2); color: #34d399; }
+  .ap-badge-blue { background: rgba(96,165,250,0.2); color: #60a5fa; }
+  .ap-badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+  .ap-badge-red { background: rgba(248,113,113,0.2); color: #f87171; }
+
+  /* ===== INFO BUTTON ===== */
+  .ap-info-btn {
+    border: 1px solid rgba(167,139,250,0.3);
+    background: rgba(167,139,250,0.08);
+    color: #a78bfa;
     border-radius: 6px;
-    overflow: hidden;
-    transition: all 0.25s;
-  }
-  .ap-merge-arr.active { border-color: rgba(167,139,250,0.5); background: rgba(167,139,250,0.08); }
-  .ap-merge-arr.merging { border-color: rgba(52,211,153,0.5); background: rgba(52,211,153,0.06); }
-  .ap-merge-cell {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Space Mono', monospace;
+    padding: 5px 10px;
     font-size: 11px;
     font-weight: 700;
-    border-right: 1px solid rgba(255,255,255,0.05);
-    transition: all 0.2s;
-    color: #8080a0;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Outfit', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
-  .ap-merge-cell:last-child { border-right: none; }
-  .ap-merge-cell.active { background: rgba(167,139,250,0.15); color: #c4b5fd; }
-  .ap-merge-cell.sorted { background: rgba(52,211,153,0.15); color: #6ee7b7; }
-
-  /* ===== QUICK SORT ===== */
-  .ap-bar.left-region { background: linear-gradient(180deg, #818cf8 0%, #4338ca 100%); }
-  .ap-bar.right-region { background: linear-gradient(180deg, #f472b6 0%, #be185d 100%); }
+  .ap-info-btn:hover { background: rgba(167,139,250,0.15); }
 
   @keyframes apPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
   @keyframes apNodePulse { 0%,100% { filter: drop-shadow(0 0 8px rgba(96,165,250,0.5)); } 50% { filter: drop-shadow(0 0 18px rgba(96,165,250,0.9)); } }
   @keyframes apFoundPop { 0% { transform: scale(1); } 50% { transform: scale(1.25); } 100% { transform: scale(1.15); } }
   @keyframes apSlideIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
   @keyframes apFadeIn { from { opacity: 0; transform: translateX(-4px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes apSlideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
 `;
 
 // ============================================================
-// ALGORITHM IMPLEMENTATIONS
+// ALGORITHM STEP GENERATORS
 // ============================================================
-
-// ---- BUBBLE SORT ----
 function generateBubbleSortSteps(arr) {
   const a = [...arr];
   const steps = [];
@@ -579,6 +874,7 @@ function generateBubbleSortSteps(arr) {
         swapping: [],
         sorted: Array.from({ length: i }, (_, k) => n - 1 - k),
         msg: `Comparing a[${j}]=${a[j]} and a[${j + 1}]=${a[j + 1]}`,
+        explain: `Are ${a[j]} > ${a[j + 1]}? ${a[j] > a[j + 1] ? "Yes! We need to swap them." : "No, they're in order. Keep going."}`,
         type: "compare",
         pseudoLine: 3,
       });
@@ -589,7 +885,8 @@ function generateBubbleSortSteps(arr) {
           comparing: [],
           swapping: [j, j + 1],
           sorted: Array.from({ length: i }, (_, k) => n - 1 - k),
-          msg: `Swap! a[${j}] and a[${j + 1}] → [${a[j]}, ${a[j + 1]}]`,
+          msg: `Swap! a[${j}] ↔ a[${j + 1}]`,
+          explain: `Swapped! The bigger number (${a[j + 1]}) moves right, smaller (${a[j]}) moves left.`,
           type: "swap",
           pseudoLine: 4,
         });
@@ -600,7 +897,8 @@ function generateBubbleSortSteps(arr) {
       comparing: [],
       swapping: [],
       sorted: Array.from({ length: i + 1 }, (_, k) => n - 1 - k),
-      msg: `Pass ${i + 1} done. a[${n - 1 - i}]=${a[n - 1 - i]} is in place.`,
+      msg: `Pass ${i + 1} done. ${a[n - 1 - i]} settled at the end!`,
+      explain: `After this pass, the ${i + 1} largest element(s) are in their final sorted positions (shown in green).`,
       type: "sorted",
       pseudoLine: 2,
     });
@@ -611,13 +909,14 @@ function generateBubbleSortSteps(arr) {
     swapping: [],
     sorted: Array.from({ length: n }, (_, k) => k),
     msg: "Array fully sorted! 🎉",
+    explain:
+      "All elements are now in the correct order from smallest to largest!",
     type: "sorted",
     pseudoLine: -1,
   });
   return steps;
 }
 
-// ---- SELECTION SORT ----
 function generateSelectionSortSteps(arr) {
   const a = [...arr];
   const steps = [];
@@ -631,13 +930,12 @@ function generateSelectionSortSteps(arr) {
         swapping: [],
         sorted: Array.from({ length: i }, (_, k) => k),
         pivot: [minIdx],
-        msg: `Comparing: min(a[${minIdx}]=${a[minIdx]}) vs a[${j}]=${a[j]}`,
+        msg: `Looking for minimum: current min=${a[minIdx]} at [${minIdx}], checking a[${j}]=${a[j]}`,
+        explain: `We're searching for the smallest number in the unsorted part. Current smallest found: ${a[minIdx]}. Is ${a[j]} even smaller?`,
         type: "compare",
         pseudoLine: 3,
       });
-      if (a[j] < a[minIdx]) {
-        minIdx = j;
-      }
+      if (a[j] < a[minIdx]) minIdx = j;
     }
     if (minIdx !== i) {
       [a[i], a[minIdx]] = [a[minIdx], a[i]];
@@ -646,7 +944,8 @@ function generateSelectionSortSteps(arr) {
         comparing: [],
         swapping: [i, minIdx],
         sorted: Array.from({ length: i }, (_, k) => k),
-        msg: `Placed minimum ${a[i]} at index ${i}`,
+        msg: `Minimum ${a[i]} placed at position ${i}`,
+        explain: `Found the smallest remaining number! Placed ${a[i]} in position ${i} — its final home.`,
         type: "swap",
         pseudoLine: 5,
       });
@@ -656,7 +955,8 @@ function generateSelectionSortSteps(arr) {
       comparing: [],
       swapping: [],
       sorted: Array.from({ length: i + 1 }, (_, k) => k),
-      msg: `a[${i}]=${a[i]} is in its final position`,
+      msg: `Position ${i} is finalized with value ${a[i]}`,
+      explain: `Position ${i} now has its correct value (${a[i]}). We won't touch it again!`,
       type: "sorted",
       pseudoLine: 2,
     });
@@ -667,13 +967,13 @@ function generateSelectionSortSteps(arr) {
     swapping: [],
     sorted: Array.from({ length: n }, (_, k) => k),
     msg: "Array fully sorted! 🎉",
+    explain: "Every position now has its correct element. Sorting complete!",
     type: "sorted",
     pseudoLine: -1,
   });
   return steps;
 }
 
-// ---- INSERTION SORT ----
 function generateInsertionSortSteps(arr) {
   const a = [...arr];
   const steps = [];
@@ -687,7 +987,8 @@ function generateInsertionSortSteps(arr) {
       swapping: [],
       sorted: [],
       pivot: [i],
-      msg: `Key = a[${i}] = ${key}. Inserting into sorted portion.`,
+      msg: `Key = ${key} at index ${i}. Inserting into sorted left portion.`,
+      explain: `We picked up ${key} and will find its correct spot among the already-sorted left part.`,
       type: "compare",
       pseudoLine: 2,
     });
@@ -697,7 +998,8 @@ function generateInsertionSortSteps(arr) {
         comparing: [j, j + 1],
         swapping: [],
         sorted: [],
-        msg: `a[${j}]=${a[j]} > ${key}, shifting right`,
+        msg: `a[${j}]=${a[j]} > ${key}, shift it right`,
+        explain: `${a[j]} is bigger than ${key}, so we slide ${a[j]} one spot to the right to make room.`,
         type: "compare",
         pseudoLine: 4,
       });
@@ -707,7 +1009,8 @@ function generateInsertionSortSteps(arr) {
         comparing: [],
         swapping: [j, j + 1],
         sorted: [],
-        msg: `Shifted a[${j}]=${a[j + 1]} → position ${j + 1}`,
+        msg: `Shifted ${a[j + 1]} to position ${j + 1}`,
+        explain: `${a[j + 1]} has been moved one position right. Still searching for the right spot for ${key}.`,
         type: "swap",
         pseudoLine: 5,
       });
@@ -719,7 +1022,8 @@ function generateInsertionSortSteps(arr) {
       comparing: [],
       swapping: [],
       sorted: [],
-      msg: `Inserted ${key} at position ${j + 1}`,
+      msg: `Inserted ${key} at position ${j + 1} ✓`,
+      explain: `Found the right spot! ${key} is placed at index ${j + 1}. The left side is still sorted.`,
       type: "sorted",
       pseudoLine: 6,
     });
@@ -730,13 +1034,13 @@ function generateInsertionSortSteps(arr) {
     swapping: [],
     sorted: Array.from({ length: n }, (_, k) => k),
     msg: "Array fully sorted! 🎉",
+    explain: "Every card has been inserted into its correct position. Done!",
     type: "sorted",
     pseudoLine: -1,
   });
   return steps;
 }
 
-// ---- MERGE SORT ----
 function generateMergeSortSteps(arr) {
   const steps = [];
   function merge(a, left, mid, right) {
@@ -751,45 +1055,35 @@ function generateMergeSortSteps(arr) {
         comparing: [left + i, mid + 1 + j],
         swapping: [],
         sorted: [],
-        msg: `Merging: comparing ${leftArr[i]} and ${rightArr[j]}`,
+        msg: `Merging: comparing ${leftArr[i]} vs ${rightArr[j]}`,
+        explain: `Comparing left piece (${leftArr[i]}) with right piece (${rightArr[j]}). The smaller one goes next.`,
         type: "compare",
         pseudoLine: 5,
-        mergeLeft: left,
-        mergeRight: right,
       });
-      if (leftArr[i] <= rightArr[j]) {
-        a[k++] = leftArr[i++];
-      } else {
-        a[k++] = rightArr[j++];
-      }
+      if (leftArr[i] <= rightArr[j]) a[k++] = leftArr[i++];
+      else a[k++] = rightArr[j++];
       steps.push({
         arr: [...a],
         comparing: [],
         swapping: [k - 1],
         sorted: [],
         msg: `Placed ${a[k - 1]} at position ${k - 1}`,
+        explain: `${a[k - 1]} was smaller, so it goes into the merged result first.`,
         type: "swap",
         pseudoLine: 6,
-        mergeLeft: left,
-        mergeRight: right,
       });
     }
-    while (i < leftArr.length) {
-      a[k++] = leftArr[i++];
-    }
-    while (j < rightArr.length) {
-      a[k++] = rightArr[j++];
-    }
+    while (i < leftArr.length) a[k++] = leftArr[i++];
+    while (j < rightArr.length) a[k++] = rightArr[j++];
     steps.push({
       arr: [...a],
       comparing: [],
       swapping: [],
       sorted: Array.from({ length: right - left + 1 }, (_, idx) => left + idx),
-      msg: `Merged subarray [${left}..${right}]`,
+      msg: `Merged subarray [${left}..${right}] successfully`,
+      explain: `The segment from index ${left} to ${right} is now sorted! Merge complete for this section.`,
       type: "sorted",
       pseudoLine: 7,
-      mergeLeft: left,
-      mergeRight: right,
     });
   }
   function mergeSort(a, left, right) {
@@ -800,11 +1094,10 @@ function generateMergeSortSteps(arr) {
       comparing: [left, right],
       swapping: [],
       sorted: [],
-      msg: `Divide [${left}..${right}] at mid=${mid}`,
+      msg: `Split [${left}..${right}] at middle index ${mid}`,
+      explain: `Dividing the array segment in half. Left half: [${left}..${mid}], Right half: [${mid + 1}..${right}].`,
       type: "compare",
       pseudoLine: 2,
-      mergeLeft: left,
-      mergeRight: right,
     });
     mergeSort(a, left, mid);
     mergeSort(a, mid + 1, right);
@@ -818,13 +1111,13 @@ function generateMergeSortSteps(arr) {
     swapping: [],
     sorted: Array.from({ length: a.length }, (_, k) => k),
     msg: "Array fully sorted! 🎉",
+    explain: "All sub-arrays have been merged back together in sorted order!",
     type: "sorted",
     pseudoLine: -1,
   });
   return steps;
 }
 
-// ---- QUICK SORT ----
 function generateQuickSortSteps(arr) {
   const steps = [];
   function partition(a, low, high) {
@@ -836,6 +1129,7 @@ function generateQuickSortSteps(arr) {
       sorted: [],
       pivot: [high],
       msg: `Pivot = a[${high}] = ${pivotVal}`,
+      explain: `We chose ${pivotVal} as the pivot. Goal: move all smaller numbers to its left, all larger to its right.`,
       type: "compare",
       pseudoLine: 2,
     });
@@ -847,24 +1141,26 @@ function generateQuickSortSteps(arr) {
         swapping: [],
         sorted: [],
         pivot: [high],
-        leftRegion: Array.from({ length: i - low + 1 }, (_, k) => low + k),
         msg: `a[${j}]=${a[j]} vs pivot=${pivotVal}`,
+        explain: `Is ${a[j]} ≤ pivot (${pivotVal})? ${a[j] <= pivotVal ? "Yes → it belongs on the LEFT side." : "No → it stays on the RIGHT side."}`,
         type: "compare",
         pseudoLine: 4,
       });
       if (a[j] <= pivotVal) {
         i++;
         [a[i], a[j]] = [a[j], a[i]];
-        steps.push({
-          arr: [...a],
-          comparing: [],
-          swapping: [i, j],
-          sorted: [],
-          pivot: [high],
-          msg: `Swap a[${i}]=${a[i]} and a[${j}]=${a[j]}`,
-          type: "swap",
-          pseudoLine: 5,
-        });
+        if (i !== j)
+          steps.push({
+            arr: [...a],
+            comparing: [],
+            swapping: [i, j],
+            sorted: [],
+            pivot: [high],
+            msg: `Swap a[${i}]=${a[i]} and a[${j}]=${a[j]}`,
+            explain: `${a[i]} is ≤ pivot, so it moves to the left partition.`,
+            type: "swap",
+            pseudoLine: 5,
+          });
       }
     }
     [a[i + 1], a[high]] = [a[high], a[i + 1]];
@@ -874,7 +1170,8 @@ function generateQuickSortSteps(arr) {
       swapping: [],
       sorted: [i + 1],
       pivot: [],
-      msg: `Pivot ${pivotVal} placed at index ${i + 1}`,
+      msg: `Pivot ${pivotVal} placed at final index ${i + 1}`,
+      explain: `The pivot (${pivotVal}) is now in its FINAL position (index ${i + 1}). Everything left is ≤ ${pivotVal}, everything right is ≥ ${pivotVal}.`,
       type: "sorted",
       pseudoLine: 6,
     });
@@ -895,15 +1192,16 @@ function generateQuickSortSteps(arr) {
     swapping: [],
     sorted: Array.from({ length: a.length }, (_, k) => k),
     msg: "Array fully sorted! 🎉",
+    explain:
+      "All pivots have found their final positions. The array is sorted!",
     type: "sorted",
     pseudoLine: -1,
   });
   return steps;
 }
 
-// ---- BINARY SEARCH ----
-function generateBinarySearchSteps(arr, target) {
-  const a = [...arr].sort((x, y) => x - y);
+function generateBinarySearchSteps(sortedArr, target) {
+  const a = [...sortedArr];
   const steps = [];
   let left = 0,
     right = a.length - 1;
@@ -916,7 +1214,8 @@ function generateBinarySearchSteps(arr, target) {
       mid,
       target,
       found: false,
-      msg: `Check mid=${mid} (val=${a[mid]}). Range [${left}..${right}]`,
+      msg: `Check middle index ${mid} (value=${a[mid]}). Search range: [${left}..${right}]`,
+      explain: `We look at the middle element (${a[mid]}). Is it equal to our target (${target})? ${a[mid] === target ? "YES! Found it! 🎉" : a[mid] < target ? `No, ${a[mid]} is too small. Our target must be in the RIGHT half.` : `No, ${a[mid]} is too big. Our target must be in the LEFT half.`}`,
       type: "compare",
       pseudoLine: 3,
     });
@@ -929,7 +1228,8 @@ function generateBinarySearchSteps(arr, target) {
         target,
         found: true,
         foundIdx: mid,
-        msg: `Found ${target} at index ${mid}! 🎉`,
+        msg: `🎉 Found ${target} at index ${mid}!`,
+        explain: `Target found! ${target} is at index ${mid}. Binary search needed only ${steps.length + 1} step(s) to find it!`,
         type: "found",
         pseudoLine: 4,
       });
@@ -942,7 +1242,8 @@ function generateBinarySearchSteps(arr, target) {
         mid,
         target,
         found: false,
-        msg: `a[${mid}]=${a[mid]} < ${target} → search RIGHT half`,
+        msg: `${a[mid]} < ${target} → search RIGHT half. New left = ${mid + 1}`,
+        explain: `Since ${a[mid]} is smaller than ${target}, our target must be to the RIGHT. We eliminate the entire left half!`,
         type: "compare",
         pseudoLine: 5,
       });
@@ -955,7 +1256,8 @@ function generateBinarySearchSteps(arr, target) {
         mid,
         target,
         found: false,
-        msg: `a[${mid}]=${a[mid]} > ${target} → search LEFT half`,
+        msg: `${a[mid]} > ${target} → search LEFT half. New right = ${mid - 1}`,
+        explain: `Since ${a[mid]} is bigger than ${target}, our target must be to the LEFT. We eliminate the entire right half!`,
         type: "compare",
         pseudoLine: 6,
       });
@@ -970,14 +1272,14 @@ function generateBinarySearchSteps(arr, target) {
     target,
     found: false,
     notFound: true,
-    msg: `${target} not found in array`,
+    msg: `${target} is not in the array`,
+    explain: `We've eliminated all possibilities. The target (${target}) does not exist in this sorted array.`,
     type: "notfound",
     pseudoLine: -1,
   });
   return steps;
 }
 
-// ---- BFS ----
 const GRAPH_NODES = {
   0: { label: "A", x: 0.5, y: 0.12 },
   1: { label: "B", x: 0.25, y: 0.35 },
@@ -1016,7 +1318,8 @@ function generateBFSSteps(start = 0) {
       queue: [...queue],
       traversedEdges: new Set(traversedEdges),
       activeEdge: null,
-      msg: `Visit node ${GRAPH_NODES[node].label}. Queue: [${queue.map((n) => GRAPH_NODES[n].label).join(", ")}]`,
+      msg: `Visiting node ${GRAPH_NODES[node].label}. Queue: [${queue.map((n) => GRAPH_NODES[n].label).join(", ") || "empty"}]`,
+      explain: `We're at node ${GRAPH_NODES[node].label}. Now we'll look at all its unvisited neighbors and add them to the queue.`,
       type: "visit",
       pseudoLine: 3,
     });
@@ -1032,7 +1335,8 @@ function generateBFSSteps(start = 0) {
           queue: [...queue],
           traversedEdges: new Set(traversedEdges),
           activeEdge: edgeKey,
-          msg: `Explore edge ${GRAPH_NODES[node].label}→${GRAPH_NODES[neighbor].label}: not visited, adding to queue`,
+          msg: `${GRAPH_NODES[node].label}→${GRAPH_NODES[neighbor].label}: unvisited! Adding to queue`,
+          explain: `Node ${GRAPH_NODES[neighbor].label} hasn't been visited yet. We add it to the back of the queue to visit later.`,
           type: "explore",
           pseudoLine: 5,
         });
@@ -1046,7 +1350,8 @@ function generateBFSSteps(start = 0) {
           queue: [...queue],
           traversedEdges: new Set(traversedEdges),
           activeEdge: null,
-          msg: `Node ${GRAPH_NODES[neighbor].label} already visited, skip`,
+          msg: `${GRAPH_NODES[neighbor].label} already visited, skip`,
+          explain: `Node ${GRAPH_NODES[neighbor].label} was already visited. We skip it to avoid going in circles!`,
           type: "skip",
           pseudoLine: 6,
         });
@@ -1060,13 +1365,14 @@ function generateBFSSteps(start = 0) {
     traversedEdges: new Set(traversedEdges),
     activeEdge: null,
     msg: "BFS complete! All reachable nodes visited. 🎉",
+    explain:
+      "We visited every node reachable from the start, always exploring closest neighbors first (layer by layer)!",
     type: "done",
     pseudoLine: -1,
   });
   return steps;
 }
 
-// ---- DFS ----
 function generateDFSSteps(start = 0) {
   const steps = [];
   const visited = new Set();
@@ -1081,7 +1387,8 @@ function generateDFSSteps(start = 0) {
       stack: [...stack],
       traversedEdges: new Set(traversedEdges),
       activeEdge: null,
-      msg: `Visit ${GRAPH_NODES[node].label}. Stack: [${stack.map((n) => GRAPH_NODES[n].label).join("→")}]`,
+      msg: `Visiting ${GRAPH_NODES[node].label}. Stack: [${stack.map((n) => GRAPH_NODES[n].label).join("→")}]`,
+      explain: `We go as deep as possible! Now at ${GRAPH_NODES[node].label}. We'll explore one of its neighbors before backtracking.`,
       type: "visit",
       pseudoLine: 2,
     });
@@ -1098,7 +1405,8 @@ function generateDFSSteps(start = 0) {
           stack: [...stack],
           traversedEdges: new Set(traversedEdges),
           activeEdge: edgeKey,
-          msg: `Explore edge ${GRAPH_NODES[node].label}→${GRAPH_NODES[neighbor].label}: not visited`,
+          msg: `Go deeper: ${GRAPH_NODES[node].label}→${GRAPH_NODES[neighbor].label}`,
+          explain: `${GRAPH_NODES[neighbor].label} is unvisited. We dive deeper into this path immediately (that's what "depth-first" means)!`,
           type: "explore",
           pseudoLine: 4,
         });
@@ -1112,7 +1420,8 @@ function generateDFSSteps(start = 0) {
       stack: [...stack],
       traversedEdges: new Set(traversedEdges),
       activeEdge: null,
-      msg: `Backtrack from ${GRAPH_NODES[node].label}. Stack: [${stack.map((n) => GRAPH_NODES[n].label).join("→")}]`,
+      msg: `Backtrack from ${GRAPH_NODES[node].label}. Stack: [${stack.map((n) => GRAPH_NODES[n].label).join("→") || "empty"}]`,
+      explain: `Dead end at ${GRAPH_NODES[node].label} (no unvisited neighbors). We backtrack to try a different path.`,
       type: "backtrack",
       pseudoLine: 5,
     });
@@ -1125,6 +1434,8 @@ function generateDFSSteps(start = 0) {
     traversedEdges: new Set(traversedEdges),
     activeEdge: null,
     msg: "DFS complete! All reachable nodes visited. 🎉",
+    explain:
+      "We explored every reachable path to its deepest point before backtracking. Graph fully traversed!",
     type: "done",
     pseudoLine: -1,
   });
@@ -1132,7 +1443,7 @@ function generateDFSSteps(start = 0) {
 }
 
 // ============================================================
-// PSEUDOCODE DEFINITIONS
+// PSEUDOCODE
 // ============================================================
 const PSEUDOCODE = {
   bubble: [
@@ -1201,114 +1512,202 @@ const PSEUDOCODE = {
   ],
 };
 
-const ALGO_INFO = {
-  bubble: {
-    name: "Bubble Sort",
-    time: "O(n²)",
-    space: "O(1)",
-    best: "O(n)",
-    stable: "Yes",
-  },
-  selection: {
-    name: "Selection Sort",
-    time: "O(n²)",
-    space: "O(1)",
-    best: "O(n²)",
-    stable: "No",
-  },
-  insertion: {
-    name: "Insertion Sort",
-    time: "O(n²)",
-    space: "O(1)",
-    best: "O(n)",
-    stable: "Yes",
-  },
-  merge: {
-    name: "Merge Sort",
-    time: "O(n log n)",
-    space: "O(n)",
-    best: "O(n log n)",
-    stable: "Yes",
-  },
-  quick: {
-    name: "Quick Sort",
-    time: "O(n log n)",
-    space: "O(log n)",
-    best: "O(n log n)",
-    stable: "No",
-  },
-  binary: {
-    name: "Binary Search",
-    time: "O(log n)",
-    space: "O(1)",
-    best: "O(1)",
-    stable: "—",
-  },
-  bfs: {
-    name: "Breadth-First Search",
-    time: "O(V+E)",
-    space: "O(V)",
-    best: "O(1)",
-    stable: "—",
-  },
-  dfs: {
-    name: "Depth-First Search",
-    time: "O(V+E)",
-    space: "O(V)",
-    best: "O(1)",
-    stable: "—",
-  },
-};
-
 // ============================================================
-// HELPER: Random array
+// HELPER
 // ============================================================
-function randomArray(size = 16, min = 5, max = 95) {
+function randomArray(size = 12, min = 5, max = 95) {
   return Array.from(
     { length: size },
     () => Math.floor(Math.random() * (max - min + 1)) + min,
   );
 }
 
+function parseUserArray(input) {
+  if (!input.trim()) return null;
+  const nums = input
+    .split(/[\s,]+/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map(Number);
+  if (nums.some(isNaN)) return null;
+  if (nums.length < 2 || nums.length > 30) return null;
+  if (nums.some((n) => n < 1 || n > 999)) return null;
+  return nums;
+}
+
 // ============================================================
-// SORT VISUALIZER COMPONENT
+// INTRO MODAL
+// ============================================================
+function IntroModal({ algo, onStart, onSkip }) {
+  const info = ALGO_INTROS[algo];
+  if (!info) return null;
+  return (
+    <div
+      className="ap-intro-overlay"
+      onClick={(e) => e.target === e.currentTarget && onSkip()}
+    >
+      <div className="ap-intro-card">
+        <div className="ap-intro-emoji">{info.emoji}</div>
+        <div className="ap-intro-title">{info.title}</div>
+        <div className="ap-intro-tagline">// {info.tagline}</div>
+
+        <div className="ap-intro-section">
+          <div className="ap-intro-section-title">📖 What is it?</div>
+          <div className="ap-intro-what">{info.what}</div>
+        </div>
+
+        <div className="ap-intro-section">
+          <div className="ap-intro-section-title">🎭 Think of it like...</div>
+          <div className="ap-intro-analogy">{info.analogy}</div>
+        </div>
+
+        <div className="ap-intro-section">
+          <div className="ap-intro-section-title">
+            🔢 How it works step by step
+          </div>
+          <div className="ap-intro-steps">
+            {info.steps.map((step, i) => (
+              <div key={i} className="ap-intro-step">
+                <div className="ap-intro-step-num">{i + 1}</div>
+                <span>{step}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="ap-intro-section">
+          <div className="ap-intro-section-title">⚡ Complexity</div>
+          <div className="ap-intro-complexity">
+            {[
+              ["Time (avg)", info.complexity.time],
+              ["Time (best)", info.complexity.best],
+              ["Space", info.complexity.space],
+              ["Stable", info.complexity.stable],
+            ].map(([k, v]) => (
+              <div key={k} className="ap-intro-complexity-item">
+                <div className="ap-intro-complexity-label">{k}</div>
+                <div className="ap-intro-complexity-val">{v}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="ap-intro-section">
+          <div className="ap-intro-section-title">💡 Pro Tip</div>
+          <div className="ap-intro-tip">{info.tip}</div>
+        </div>
+
+        <div className="ap-intro-actions">
+          <button className="ap-intro-btn-start" onClick={onStart}>
+            🚀 Let's Visualize It!
+          </button>
+          <button className="ap-intro-btn-skip" onClick={onSkip}>
+            Skip intro
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// USER ARRAY INPUT ROW
+// ============================================================
+function ArrayInputRow({ onApply, placeholder, hint, label = "Your Array" }) {
+  const [value, setValue] = useState("");
+  const [error, setError] = useState("");
+
+  const handleApply = () => {
+    if (!value.trim()) {
+      setError("Please enter some numbers");
+      return;
+    }
+    const arr = parseUserArray(value);
+    if (!arr) {
+      setError("Enter 2–30 numbers (1–999) separated by commas or spaces");
+      return;
+    }
+    setError("");
+    onApply(arr);
+  };
+
+  return (
+    <div className="ap-input-section">
+      <span className="ap-input-section-label">{label}:</span>
+      <input
+        className="ap-custom-input"
+        placeholder={placeholder || "e.g. 64 34 25 12 22 11 90"}
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+          setError("");
+        }}
+        onKeyDown={(e) => e.key === "Enter" && handleApply()}
+      />
+      <button className="ap-btn ap-btn-teal" onClick={handleApply}>
+        ✓ Use This
+      </button>
+      <button
+        className="ap-btn ap-btn-ghost"
+        onClick={() => {
+          setValue("");
+          setError("");
+        }}
+      >
+        Clear
+      </button>
+      {error && <span className="ap-input-error">⚠ {error}</span>}
+      {!error && hint && <span className="ap-input-hint">{hint}</span>}
+    </div>
+  );
+}
+
+// ============================================================
+// SORT VISUALIZER
 // ============================================================
 function SortVisualizer({ algo }) {
-  const [arr, setArr] = useState(() => randomArray(16));
+  const [arr, setArr] = useState(() => randomArray(12));
   const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(100);
-  const [size, setSize] = useState(16);
+  const [size, setSize] = useState(12);
   const [log, setLog] = useState([]);
   const [activePseudo, setActivePseudo] = useState(-1);
+  const [showIntro, setShowIntro] = useState(true);
   const timerRef = useRef(null);
   const logRef = useRef(null);
 
   const currentData =
     currentStep >= 0 && currentStep < steps.length ? steps[currentStep] : null;
+  const info = ALGO_INTROS[algo];
+  const pseudo = PSEUDOCODE[algo] || [];
 
-  const generateSteps = useCallback(() => {
-    const newArr = randomArray(size);
-    setArr(newArr);
-    let s;
-    if (algo === "bubble") s = generateBubbleSortSteps(newArr);
-    else if (algo === "selection") s = generateSelectionSortSteps(newArr);
-    else if (algo === "insertion") s = generateInsertionSortSteps(newArr);
-    else if (algo === "merge") s = generateMergeSortSteps(newArr);
-    else if (algo === "quick") s = generateQuickSortSteps(newArr);
-    else s = generateBubbleSortSteps(newArr);
-    setSteps(s);
-    setCurrentStep(-1);
-    setLog([]);
-    setActivePseudo(-1);
-    setIsPlaying(false);
-    if (timerRef.current) clearInterval(timerRef.current);
-  }, [algo, size]);
+  const generateSteps = useCallback(
+    (customArr = null) => {
+      const newArr = customArr || randomArray(size);
+      setArr(newArr);
+      let s;
+      if (algo === "bubble") s = generateBubbleSortSteps(newArr);
+      else if (algo === "selection") s = generateSelectionSortSteps(newArr);
+      else if (algo === "insertion") s = generateInsertionSortSteps(newArr);
+      else if (algo === "merge") s = generateMergeSortSteps(newArr);
+      else if (algo === "quick") s = generateQuickSortSteps(newArr);
+      else s = generateBubbleSortSteps(newArr);
+      setSteps(s);
+      setCurrentStep(-1);
+      setLog([]);
+      setActivePseudo(-1);
+      setIsPlaying(false);
+      if (timerRef.current) clearInterval(timerRef.current);
+    },
+    [algo, size],
+  );
 
   useEffect(() => {
     generateSteps();
-  }, [algo, size]);
+    setShowIntro(true);
+  }, [algo]);
 
   useEffect(() => {
     if (!isPlaying) {
@@ -1368,7 +1767,7 @@ function SortVisualizer({ algo }) {
   };
 
   const displayArr = currentData ? currentData.arr : arr;
-  const maxVal = Math.max(...displayArr);
+  const maxVal = Math.max(...displayArr, 1);
   const isDone = currentStep >= steps.length - 1 && steps.length > 0;
 
   const getBarState = (idx) => {
@@ -1380,8 +1779,6 @@ function SortVisualizer({ algo }) {
     return "default";
   };
 
-  const info = ALGO_INFO[algo];
-  const pseudo = PSEUDOCODE[algo] || [];
   const statusText = isPlaying
     ? "Running"
     : isDone
@@ -1392,9 +1789,27 @@ function SortVisualizer({ algo }) {
 
   return (
     <>
+      {showIntro && (
+        <IntroModal
+          algo={algo}
+          onStart={() => setShowIntro(false)}
+          onSkip={() => setShowIntro(false)}
+        />
+      )}
+
+      {/* User Array Input */}
+      <ArrayInputRow
+        onApply={(arr) => generateSteps(arr)}
+        placeholder="e.g. 64 25 12 90 3 45"
+        hint="Type your own numbers! Press Enter or click Use This"
+      />
+
       <div className="ap-controls">
-        <button className="ap-btn ap-btn-ghost" onClick={generateSteps}>
-          🔀 New Array
+        <button className="ap-btn ap-btn-ghost" onClick={() => generateSteps()}>
+          🔀 Random
+        </button>
+        <button className="ap-info-btn" onClick={() => setShowIntro(true)}>
+          ℹ️ How it works
         </button>
         {!isPlaying ? (
           <button
@@ -1435,15 +1850,15 @@ function SortVisualizer({ algo }) {
           <input
             type="range"
             className="ap-slider"
-            min={6}
-            max={30}
+            min={4}
+            max={24}
             value={size}
             onChange={(e) => setSize(Number(e.target.value))}
             style={{ width: 70 }}
           />
           <span
             style={{
-              fontFamily: "'Space Mono', monospace",
+              fontFamily: "'Space Mono',monospace",
               fontSize: 11,
               color: "#a78bfa",
               minWidth: 20,
@@ -1488,7 +1903,9 @@ function SortVisualizer({ algo }) {
           <div className="ap-bars-wrap">
             {displayArr.map((val, idx) => (
               <div key={idx} className="ap-bar-container">
-                {size <= 20 && <div className="ap-bar-val">{val}</div>}
+                {displayArr.length <= 18 && (
+                  <div className="ap-bar-val">{val}</div>
+                )}
                 <div
                   className={`ap-bar ${getBarState(idx)}`}
                   style={{ height: `${(val / maxVal) * 90}%` }}
@@ -1497,7 +1914,14 @@ function SortVisualizer({ algo }) {
             ))}
           </div>
 
-          {/* Legend */}
+          {/* Step explanation box */}
+          {currentData?.explain && (
+            <div className="ap-step-explain">
+              <div className="ap-step-explain-label">💡 What's happening?</div>
+              {currentData.explain}
+            </div>
+          )}
+
           <div
             style={{
               display: "flex",
@@ -1528,7 +1952,7 @@ function SortVisualizer({ algo }) {
                   style={{
                     fontSize: 10,
                     color: "#6060a0",
-                    fontFamily: "'Space Mono', monospace",
+                    fontFamily: "'Space Mono',monospace",
                   }}
                 >
                   {label}
@@ -1543,12 +1967,12 @@ function SortVisualizer({ algo }) {
             <div className="ap-panel-header">Algorithm Info</div>
             <div className="ap-panel-content" style={{ padding: "10px 12px" }}>
               <div className="ap-algo-card">
-                <div className="ap-algo-name">{info.name}</div>
+                <div className="ap-algo-name">{info?.title}</div>
                 {[
-                  ["Time (avg)", info.time],
-                  ["Time (best)", info.best],
-                  ["Space", info.space],
-                  ["Stable", info.stable],
+                  ["Time (avg)", info?.complexity.time],
+                  ["Time (best)", info?.complexity.best],
+                  ["Space", info?.complexity.space],
+                  ["Stable", info?.complexity.stable],
                 ].map(([k, v]) => (
                   <div key={k} className="ap-algo-stat">
                     <span className="ap-algo-stat-label">{k}</span>
@@ -1607,15 +2031,8 @@ function SortVisualizer({ algo }) {
 // BINARY SEARCH VISUALIZER
 // ============================================================
 function BinarySearchVisualizer() {
-  const [arr] = useState(() =>
-    [
-      ...new Set(
-        Array.from({ length: 15 }, () => Math.floor(Math.random() * 95) + 5),
-      ),
-    ]
-      .sort((a, b) => a - b)
-      .slice(0, 14),
-  );
+  const defaultArr = [3, 8, 12, 17, 25, 31, 38, 42, 50, 64, 73, 88, 91];
+  const [arr, setArr] = useState(defaultArr);
   const [target, setTarget] = useState(null);
   const [targetInput, setTargetInput] = useState("");
   const [steps, setSteps] = useState([]);
@@ -1623,6 +2040,7 @@ function BinarySearchVisualizer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(100);
   const [log, setLog] = useState([]);
+  const [showIntro, setShowIntro] = useState(true);
   const timerRef = useRef(null);
 
   const currentData =
@@ -1649,6 +2067,16 @@ function BinarySearchVisualizer() {
     setCurrentStep(-1);
     setLog([]);
     setIsPlaying(false);
+  };
+
+  const handleCustomArray = (newArr) => {
+    const sorted = [...new Set(newArr)].sort((a, b) => a - b);
+    setArr(sorted);
+    setSteps([]);
+    setCurrentStep(-1);
+    setLog([]);
+    setTarget(null);
+    setTargetInput("");
   };
 
   useEffect(() => {
@@ -1701,12 +2129,35 @@ function BinarySearchVisualizer() {
 
   return (
     <>
+      {showIntro && (
+        <IntroModal
+          algo="binary"
+          onStart={() => setShowIntro(false)}
+          onSkip={() => setShowIntro(false)}
+        />
+      )}
+
+      {/* Custom array input */}
+      <ArrayInputRow
+        onApply={handleCustomArray}
+        placeholder="e.g. 3 8 12 25 31 50 88"
+        hint="Will be auto-sorted (binary search requires sorted array!)"
+        label="Your Array"
+      />
+
       <div className="ap-controls">
-        <div className="ap-input-row">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            flexWrap: "wrap",
+          }}
+        >
           <span className="ap-input-label">Target</span>
           <input
             className="ap-input"
-            placeholder="Enter number…"
+            placeholder="Number to find…"
             value={targetInput}
             onChange={(e) => setTargetInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -1718,6 +2169,9 @@ function BinarySearchVisualizer() {
             🎲 Random
           </button>
         </div>
+        <button className="ap-info-btn" onClick={() => setShowIntro(true)}>
+          ℹ️ How it works
+        </button>
 
         {steps.length > 0 && (
           <>
@@ -1789,7 +2243,7 @@ function BinarySearchVisualizer() {
               — {currentData.msg}
             </>
           ) : (
-            <strong>Enter a target value and click Search</strong>
+            <strong>Enter a target value to search, or click 🎲 Random</strong>
           )}
         </span>
         {steps.length > 0 && currentStep >= 0 && (
@@ -1804,7 +2258,7 @@ function BinarySearchVisualizer() {
           <div className="ap-bsearch-wrap">
             {target !== null && (
               <div className="ap-bs-target-display">
-                🎯 Target: <strong>{target}</strong>
+                🎯 Searching for: <strong>{target}</strong>
               </div>
             )}
             <div className="ap-bs-array">
@@ -1820,17 +2274,17 @@ function BinarySearchVisualizer() {
             </div>
 
             {currentData && (
-              <div className="ap-bs-pointers-row">
+              <div
+                style={{
+                  display: "flex",
+                  gap: 4,
+                  alignItems: "center",
+                  fontSize: 11,
+                  fontFamily: "'Space Mono',monospace",
+                }}
+              >
                 {currentData.left <= currentData.right && (
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: 4,
-                      alignItems: "center",
-                      fontSize: 11,
-                      fontFamily: "'Space Mono', monospace",
-                    }}
-                  >
+                  <>
                     <span style={{ color: "#818cf8" }}>
                       L={currentData.left}
                     </span>
@@ -1842,7 +2296,7 @@ function BinarySearchVisualizer() {
                     <span style={{ color: "#f472b6" }}>
                       R={currentData.right}
                     </span>
-                  </div>
+                  </>
                 )}
               </div>
             )}
@@ -1865,6 +2319,14 @@ function BinarySearchVisualizer() {
               ))}
             </div>
           </div>
+
+          {/* Explanation box */}
+          {currentData?.explain && (
+            <div className="ap-step-explain">
+              <div className="ap-step-explain-label">💡 What's happening?</div>
+              {currentData.explain}
+            </div>
+          )}
         </div>
 
         <div className="ap-panel">
@@ -1928,7 +2390,7 @@ function BinarySearchVisualizer() {
 }
 
 // ============================================================
-// GRAPH VISUALIZER (BFS / DFS)
+// GRAPH VISUALIZER
 // ============================================================
 function GraphVisualizer({ algo }) {
   const [steps, setSteps] = useState([]);
@@ -1937,6 +2399,7 @@ function GraphVisualizer({ algo }) {
   const [speed, setSpeed] = useState(100);
   const [log, setLog] = useState([]);
   const [startNode, setStartNode] = useState(0);
+  const [showIntro, setShowIntro] = useState(true);
   const svgRef = useRef(null);
   const timerRef = useRef(null);
 
@@ -1957,6 +2420,7 @@ function GraphVisualizer({ algo }) {
 
   useEffect(() => {
     handleStart();
+    setShowIntro(true);
   }, [algo]);
 
   useEffect(() => {
@@ -2028,11 +2492,27 @@ function GraphVisualizer({ algo }) {
       : currentData.stack
     : [];
   const queueLabel = algo === "bfs" ? "Queue" : "Stack";
+  const info = ALGO_INTROS[algo];
 
   return (
     <>
+      {showIntro && (
+        <IntroModal
+          algo={algo}
+          onStart={() => setShowIntro(false)}
+          onSkip={() => setShowIntro(false)}
+        />
+      )}
+
       <div className="ap-controls">
-        <div className="ap-input-row">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            flexWrap: "wrap",
+          }}
+        >
           <span className="ap-input-label">Start Node</span>
           <select
             value={startNode}
@@ -2043,7 +2523,7 @@ function GraphVisualizer({ algo }) {
               borderRadius: 7,
               padding: "6px 10px",
               color: "#e8e8f0",
-              fontFamily: "'Space Mono', monospace",
+              fontFamily: "'Space Mono',monospace",
               fontSize: 11,
             }}
           >
@@ -2057,6 +2537,9 @@ function GraphVisualizer({ algo }) {
             ⚡ Start {algo.toUpperCase()}
           </button>
         </div>
+        <button className="ap-info-btn" onClick={() => setShowIntro(true)}>
+          ℹ️ How it works
+        </button>
 
         {steps.length > 0 && (
           <>
@@ -2117,7 +2600,7 @@ function GraphVisualizer({ algo }) {
         />
         <span className="ap-status-msg">
           {currentData ? (
-            <>{currentData.msg}</>
+            currentData.msg
           ) : (
             <strong>Click Start to begin {algo.toUpperCase()} traversal</strong>
           )}
@@ -2140,10 +2623,9 @@ function GraphVisualizer({ algo }) {
                 const na = GRAPH_NODES[a],
                   nb = GRAPH_NODES[b];
                 const x1 = na.x * svgSize.w,
-                  y1 = na.y * svgSize.h;
-                const x2 = nb.x * svgSize.w,
+                  y1 = na.y * svgSize.h,
+                  x2 = nb.x * svgSize.w,
                   y2 = nb.y * svgSize.h;
-                const state = getEdgeState(a, b);
                 return (
                   <line
                     key={`${a}-${b}`}
@@ -2151,18 +2633,17 @@ function GraphVisualizer({ algo }) {
                     y1={y1}
                     x2={x2}
                     y2={y2}
-                    className={`ap-graph-edge ${state}`}
+                    className={`ap-graph-edge ${getEdgeState(a, b)}`}
                   />
                 );
               })}
               {Object.entries(GRAPH_NODES).map(([id, node]) => {
                 const x = node.x * svgSize.w,
                   y = node.y * svgSize.h;
-                const state = getNodeState(Number(id));
                 return (
                   <g
                     key={id}
-                    className={`ap-graph-node ${state}`}
+                    className={`ap-graph-node ${getNodeState(Number(id))}`}
                     transform={`translate(${x},${y})`}
                   >
                     <circle r={20} />
@@ -2211,7 +2692,7 @@ function GraphVisualizer({ algo }) {
                 style={{
                   fontSize: 10,
                   color: "#5a5a7a",
-                  fontFamily: "'Space Mono', monospace",
+                  fontFamily: "'Space Mono',monospace",
                   textTransform: "uppercase",
                   letterSpacing: "0.8px",
                 }}
@@ -2233,6 +2714,14 @@ function GraphVisualizer({ algo }) {
               ))}
             </div>
           )}
+
+          {/* Step explanation box */}
+          {currentData?.explain && (
+            <div className="ap-step-explain">
+              <div className="ap-step-explain-label">💡 What's happening?</div>
+              {currentData.explain}
+            </div>
+          )}
         </div>
 
         <div className="ap-panel">
@@ -2240,14 +2729,11 @@ function GraphVisualizer({ algo }) {
             <div className="ap-panel-header">Algorithm Info</div>
             <div className="ap-panel-content">
               <div className="ap-algo-card">
-                <div className="ap-algo-name">{ALGO_INFO[algo].name}</div>
+                <div className="ap-algo-name">{info?.title}</div>
                 {[
-                  ["Time", ALGO_INFO[algo].time],
-                  ["Space", ALGO_INFO[algo].space],
-                  [
-                    "Data Structure",
-                    algo === "bfs" ? "Queue" : "Stack (call stack)",
-                  ],
+                  ["Time", info?.complexity.time],
+                  ["Space", info?.complexity.space],
+                  ["Data Structure", algo === "bfs" ? "Queue" : "Stack"],
                   [
                     "Use Case",
                     algo === "bfs" ? "Shortest path" : "Cycle detection",
@@ -2307,8 +2793,8 @@ function GraphVisualizer({ algo }) {
 export default function Algorithms() {
   const [category, setCategory] = useState("sorting");
   const [algo, setAlgo] = useState("bubble");
-
   const styleRef = useRef(false);
+
   useEffect(() => {
     if (styleRef.current) return;
     styleRef.current = true;
@@ -2319,9 +2805,9 @@ export default function Algorithms() {
   }, []);
 
   const CATEGORIES = [
-    { id: "sorting", label: "Sorting" },
-    { id: "searching", label: "Searching" },
-    { id: "graph", label: "Graph" },
+    { id: "sorting", label: "🔢 Sorting" },
+    { id: "searching", label: "🔍 Searching" },
+    { id: "graph", label: "🕸️ Graph" },
   ];
 
   const ALGO_TABS = {
@@ -2350,7 +2836,14 @@ export default function Algorithms() {
         <div className="ap-logo">
           ⚡ Algorithm <span>//</span> Playground
         </div>
-        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 16,
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
           <div className="ap-nav">
             {CATEGORIES.map((c) => (
               <button
