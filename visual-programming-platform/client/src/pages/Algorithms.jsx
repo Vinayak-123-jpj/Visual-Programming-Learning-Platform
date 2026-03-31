@@ -161,7 +161,7 @@ const ALGO_INTROS = {
 };
 
 // ============================================================
-// STYLES
+// STYLES  ← FONT SIZES INCREASED THROUGHOUT
 // ============================================================
 const STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
@@ -186,7 +186,7 @@ const STYLES = `
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 24px;
+    padding: 14px 28px;
     background: linear-gradient(90deg, #09091a 0%, #0e0e22 100%);
     border-bottom: 1px solid #1a1a32;
     flex-shrink: 0;
@@ -204,7 +204,7 @@ const STYLES = `
   }
   .ap-logo {
     font-family: 'Space Mono', monospace;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 700;
     letter-spacing: -0.5px;
     background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
@@ -225,10 +225,10 @@ const STYLES = `
     border: none;
     cursor: pointer;
     font-family: 'Space Mono', monospace;
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 1px;
-    padding: 7px 16px;
+    padding: 8px 18px;
     border-radius: 6px;
     transition: all 0.18s;
     text-transform: uppercase;
@@ -270,26 +270,26 @@ const STYLES = `
     border: 1px solid rgba(167,139,250,0.3);
     border-radius: 18px;
     padding: 28px 32px;
-    max-width: 620px;
+    max-width: 640px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 20px 80px rgba(0,0,0,0.8), 0 0 40px rgba(109,74,245,0.15);
     animation: apSlideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
   }
-  .ap-intro-emoji { font-size: 48px; margin-bottom: 10px; text-align: center; }
-  .ap-intro-title { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 4px; color: #e8e8f0; }
-  .ap-intro-tagline { text-align: center; color: #a78bfa; font-size: 13px; font-family: 'Space Mono', monospace; margin-bottom: 20px; }
+  .ap-intro-emoji { font-size: 52px; margin-bottom: 10px; text-align: center; }
+  .ap-intro-title { font-size: 30px; font-weight: 800; text-align: center; margin-bottom: 4px; color: #e8e8f0; }
+  .ap-intro-tagline { text-align: center; color: #a78bfa; font-size: 14px; font-family: 'Space Mono', monospace; margin-bottom: 20px; }
   .ap-intro-section { margin-bottom: 18px; }
-  .ap-intro-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #5a5a7a; margin-bottom: 8px; font-family: 'Space Mono', monospace; }
-  .ap-intro-what { font-size: 14px; line-height: 1.7; color: #c0c0e0; }
+  .ap-intro-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: #5a5a7a; margin-bottom: 8px; font-family: 'Space Mono', monospace; }
+  .ap-intro-what { font-size: 15px; line-height: 1.7; color: #c0c0e0; }
   .ap-intro-analogy {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.08);
     border-left: 3px solid #a78bfa;
     border-radius: 8px;
     padding: 12px 14px;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.65;
     color: #c8c8e8;
   }
@@ -298,7 +298,7 @@ const STYLES = `
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 13px;
+    font-size: 14px;
     color: #b0b0d0;
     line-height: 1.5;
   }
@@ -306,12 +306,12 @@ const STYLES = `
     background: rgba(167,139,250,0.2);
     color: #a78bfa;
     border-radius: 50%;
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     flex-shrink: 0;
     margin-top: 1px;
@@ -328,14 +328,14 @@ const STYLES = `
     border-radius: 8px;
     padding: 8px 10px;
   }
-  .ap-intro-complexity-label { font-size: 9px; color: #5a5a7a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
-  .ap-intro-complexity-val { font-size: 14px; font-weight: 700; color: #a78bfa; font-family: 'Space Mono', monospace; }
+  .ap-intro-complexity-label { font-size: 10px; color: #5a5a7a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
+  .ap-intro-complexity-val { font-size: 16px; font-weight: 700; color: #a78bfa; font-family: 'Space Mono', monospace; }
   .ap-intro-tip {
     background: rgba(52,211,153,0.08);
     border: 1px solid rgba(52,211,153,0.2);
     border-radius: 8px;
     padding: 10px 12px;
-    font-size: 12px;
+    font-size: 13px;
     color: #6ee7b7;
     line-height: 1.55;
   }
@@ -345,9 +345,9 @@ const STYLES = `
     border: none;
     cursor: pointer;
     font-family: 'Outfit', sans-serif;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
-    padding: 12px 20px;
+    padding: 13px 20px;
     border-radius: 10px;
     background: linear-gradient(135deg, #6d4af5, #4a3aff);
     color: #fff;
@@ -359,9 +359,9 @@ const STYLES = `
     border: 1px solid rgba(255,255,255,0.12);
     cursor: pointer;
     font-family: 'Outfit', sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
-    padding: 12px 18px;
+    padding: 13px 18px;
     border-radius: 10px;
     background: transparent;
     color: #7070a0;
@@ -384,10 +384,10 @@ const STYLES = `
     border: none;
     cursor: pointer;
     font-family: 'Outfit', sans-serif;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.5px;
-    padding: 7px 14px;
+    padding: 8px 16px;
     border-radius: 7px;
     transition: all 0.15s;
     outline: none;
@@ -423,8 +423,8 @@ const STYLES = `
     padding: 6px 12px;
     margin-left: auto;
   }
-  .ap-speed-label { font-size: 10px; font-weight: 700; color: #5a5a7a; text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; }
-  .ap-speed-val { font-family: 'Space Mono', monospace; font-size: 11px; color: #a78bfa; min-width: 40px; text-align: right; font-weight: 700; }
+  .ap-speed-label { font-size: 12px; font-weight: 700; color: #5a5a7a; text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; }
+  .ap-speed-val { font-family: 'Space Mono', monospace; font-size: 12px; color: #a78bfa; min-width: 40px; text-align: right; font-weight: 700; }
 
   input[type=range].ap-slider {
     -webkit-appearance: none; appearance: none;
@@ -433,7 +433,7 @@ const STYLES = `
   }
   input[type=range].ap-slider::-webkit-slider-thumb {
     -webkit-appearance: none; appearance: none;
-    width: 14px; height: 14px; border-radius: 50%;
+    width: 15px; height: 15px; border-radius: 50%;
     background: #a78bfa; cursor: pointer;
     box-shadow: 0 0 7px rgba(167,139,250,0.6);
     transition: box-shadow 0.15s;
@@ -461,7 +461,7 @@ const STYLES = `
     flex-shrink: 0;
     flex-wrap: wrap;
   }
-  .ap-input-section-label { font-size: 10px; font-weight: 700; color: #7070a0; text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; font-family: 'Space Mono', monospace; }
+  .ap-input-section-label { font-size: 12px; font-weight: 700; color: #7070a0; text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; font-family: 'Space Mono', monospace; }
   .ap-custom-input {
     flex: 1;
     min-width: 180px;
@@ -471,49 +471,49 @@ const STYLES = `
     border-radius: 7px;
     padding: 7px 12px;
     font-family: 'Space Mono', monospace;
-    font-size: 11px;
+    font-size: 13px;
     color: #e8e8f0;
     outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
   }
   .ap-custom-input:focus { border-color: rgba(167,139,250,0.5); box-shadow: 0 0 0 2px rgba(167,139,250,0.08); }
   .ap-custom-input::placeholder { color: #4a4a6a; }
-  .ap-input-hint { font-size: 10px; color: #4a4a6a; font-family: 'Space Mono', monospace; }
-  .ap-input-error { font-size: 10px; color: #f87171; font-family: 'Space Mono', monospace; padding: 4px 8px; background: rgba(239,68,68,0.08); border-radius: 5px; border: 1px solid rgba(239,68,68,0.2); }
+  .ap-input-hint { font-size: 11px; color: #4a4a6a; font-family: 'Space Mono', monospace; }
+  .ap-input-error { font-size: 11px; color: #f87171; font-family: 'Space Mono', monospace; padding: 4px 8px; background: rgba(239,68,68,0.08); border-radius: 5px; border: 1px solid rgba(239,68,68,0.2); }
   .ap-input-tag {
     display: inline-flex; align-items: center; gap: 4px;
     background: rgba(167,139,250,0.12);
     border: 1px solid rgba(167,139,250,0.25);
     border-radius: 5px; padding: 3px 9px;
-    font-family: 'Space Mono', monospace; font-size: 11px; color: #c4b5fd;
+    font-family: 'Space Mono', monospace; font-size: 12px; color: #c4b5fd;
     font-weight: 700;
   }
 
   /* ===== STATUS ===== */
   .ap-status-bar {
-    padding: 5px 24px;
+    padding: 6px 24px;
     background: #08081a;
     border-bottom: 1px solid #111128;
     display: flex;
     align-items: center;
     gap: 14px;
     flex-shrink: 0;
-    min-height: 32px;
+    min-height: 36px;
   }
-  .ap-status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .ap-status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .ap-status-dot.idle { background: #3a3a5a; }
   .ap-status-dot.running { background: #10b981; box-shadow: 0 0 8px #10b981; animation: apPulse 1s infinite; }
   .ap-status-dot.paused { background: #f59e0b; }
   .ap-status-dot.done { background: #a78bfa; }
-  .ap-status-msg { font-size: 11px; color: #7070a0; font-family: 'Space Mono', monospace; }
+  .ap-status-msg { font-size: 13px; color: #7070a0; font-family: 'Space Mono', monospace; }
   .ap-status-msg strong { color: #d0d0f0; font-weight: 400; }
-  .ap-step-counter { margin-left: auto; font-size: 10px; font-family: 'Space Mono', monospace; color: #4a4a6a; }
+  .ap-step-counter { margin-left: auto; font-size: 12px; font-family: 'Space Mono', monospace; color: #4a4a6a; }
 
   /* ===== MAIN AREA ===== */
   .ap-main {
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 260px;
+    grid-template-columns: 1fr 280px;
     overflow: hidden;
     min-height: 0;
   }
@@ -563,8 +563,8 @@ const STYLES = `
     align-items: center;
     justify-content: flex-end;
     flex: 1;
-    max-width: 56px;
-    min-width: 8px;
+    max-width: 64px;
+    min-width: 10px;
     height: 100%;
     position: relative;
     transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
@@ -577,9 +577,10 @@ const STYLES = `
   }
   .ap-bar-val {
     font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 3px;
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.92);
+    margin-bottom: 5px;
     text-align: center;
     line-height: 1;
   }
@@ -610,19 +611,19 @@ const STYLES = `
   }
   .ap-bs-array {
     display: flex;
-    gap: 4px;
+    gap: 5px;
     flex-wrap: wrap;
     justify-content: center;
   }
   .ap-bs-cell {
-    width: 52px;
-    height: 52px;
+    width: 62px;
+    height: 62px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 8px;
     font-family: 'Space Mono', monospace;
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 700;
     transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
     position: relative;
@@ -630,7 +631,7 @@ const STYLES = `
     gap: 2px;
   }
   .ap-bs-cell-idx {
-    font-size: 8px;
+    font-size: 9px;
     font-weight: 400;
     opacity: 0.5;
     position: absolute;
@@ -644,11 +645,11 @@ const STYLES = `
   .ap-bs-cell.found { background: rgba(52,211,153,0.25); border: 2px solid rgba(52,211,153,0.7); color: #6ee7b7; box-shadow: 0 0 18px rgba(52,211,153,0.5); transform: scale(1.15); animation: apFoundPop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
   .ap-bs-cell.eliminated { background: rgba(30,30,50,0.4); border: 1px solid rgba(60,60,90,0.3); color: #3a3a5a; }
   .ap-bs-legend { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-  .ap-bs-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #7070a0; }
-  .ap-bs-legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .ap-bs-legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #7070a0; }
+  .ap-bs-legend-dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
   .ap-bs-target-display {
     font-family: 'Space Mono', monospace;
-    font-size: 13px;
+    font-size: 14px;
     color: #a78bfa;
     background: rgba(167,139,250,0.1);
     border: 1px solid rgba(167,139,250,0.25);
@@ -671,7 +672,7 @@ const STYLES = `
   .ap-graph-edge.traversed { stroke: rgba(167,139,250,0.7); stroke-width: 2.5; }
   .ap-graph-edge.active { stroke: rgba(250,204,21,0.9); stroke-width: 3; filter: drop-shadow(0 0 6px rgba(250,204,21,0.6)); }
   .ap-graph-node circle { transition: fill 0.25s, stroke 0.25s; }
-  .ap-graph-node text { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; fill: #e8e8f0; pointer-events: none; }
+  .ap-graph-node text { font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; fill: #e8e8f0; pointer-events: none; }
   .ap-graph-node.unvisited circle { fill: #1a1a3a; stroke: rgba(100,100,160,0.5); stroke-width: 2; }
   .ap-graph-node.visiting circle { fill: rgba(250,204,21,0.3); stroke: #facc15; stroke-width: 3; filter: drop-shadow(0 0 10px rgba(250,204,21,0.5)); }
   .ap-graph-node.visited circle { fill: rgba(167,139,250,0.25); stroke: #a78bfa; stroke-width: 2.5; }
@@ -690,20 +691,20 @@ const STYLES = `
     flex-shrink: 0;
     overflow-x: auto;
   }
-  .ap-queue-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #5a5a7a; flex-shrink: 0; font-family: 'Space Mono', monospace; }
+  .ap-queue-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #5a5a7a; flex-shrink: 0; font-family: 'Space Mono', monospace; }
   .ap-queue-item {
     background: rgba(167,139,250,0.15);
     border: 1px solid rgba(167,139,250,0.3);
     border-radius: 5px;
-    padding: 3px 9px;
+    padding: 4px 10px;
     font-family: 'Space Mono', monospace;
-    font-size: 11px;
+    font-size: 13px;
     color: #c4b5fd;
     animation: apSlideIn 0.2s cubic-bezier(0.34,1.56,0.64,1);
     flex-shrink: 0;
   }
   .ap-queue-item.head { background: rgba(52,211,153,0.2); border-color: rgba(52,211,153,0.4); color: #6ee7b7; }
-  .ap-queue-empty { font-size: 10px; color: #3a3a5a; font-style: italic; font-family: 'Space Mono', monospace; }
+  .ap-queue-empty { font-size: 12px; color: #3a3a5a; font-style: italic; font-family: 'Space Mono', monospace; }
 
   /* ===== RIGHT PANEL ===== */
   .ap-panel {
@@ -719,7 +720,7 @@ const STYLES = `
     padding: 8px 14px;
     background: #09091a;
     border-bottom: 1px solid #0e0e22;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.2px;
@@ -740,11 +741,11 @@ const STYLES = `
     padding: 10px 12px;
     margin-bottom: 8px;
   }
-  .ap-algo-name { font-size: 13px; font-weight: 700; color: #e8e8f0; margin-bottom: 5px; }
-  .ap-algo-stat { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 11px; }
+  .ap-algo-name { font-size: 14px; font-weight: 700; color: #e8e8f0; margin-bottom: 5px; }
+  .ap-algo-stat { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
   .ap-algo-stat:last-child { border-bottom: none; }
   .ap-algo-stat-label { color: #5a5a7a; }
-  .ap-algo-stat-val { font-family: 'Space Mono', monospace; font-size: 10px; color: #a78bfa; }
+  .ap-algo-stat-val { font-family: 'Space Mono', monospace; font-size: 12px; color: #a78bfa; }
 
   /* ===== PSEUDOCODE ===== */
   .ap-pseudo {
@@ -759,10 +760,10 @@ const STYLES = `
     align-items: center;
     padding: 3px 10px;
     font-family: 'Space Mono', monospace;
-    font-size: 10px;
+    font-size: 12px;
     color: #6060a0;
     transition: all 0.2s;
-    line-height: 1.7;
+    line-height: 1.8;
     border-left: 2px solid transparent;
   }
   .ap-pseudo-line.active {
@@ -770,19 +771,19 @@ const STYLES = `
     color: #c4b5fd;
     border-left-color: #a78bfa;
   }
-  .ap-pseudo-line-num { color: #3a3a5a; min-width: 22px; flex-shrink: 0; }
+  .ap-pseudo-line-num { color: #3a3a5a; min-width: 24px; flex-shrink: 0; }
 
   /* ===== STEP LOG ===== */
   .ap-log-item {
-    padding: 4px 8px;
+    padding: 5px 9px;
     border-radius: 5px;
-    font-size: 10px;
+    font-size: 12px;
     font-family: 'Space Mono', monospace;
     color: #8080b0;
     border-left: 2px solid transparent;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     animation: apFadeIn 0.25s ease;
-    line-height: 1.5;
+    line-height: 1.55;
   }
   .ap-log-item.latest { background: rgba(167,139,250,0.08); border-left-color: #a78bfa; color: #c4b5fd; }
   .ap-log-item.compare { border-left-color: #facc15; }
@@ -795,38 +796,38 @@ const STYLES = `
     background: rgba(52,211,153,0.06);
     border: 1px solid rgba(52,211,153,0.2);
     border-radius: 8px;
-    padding: 9px 12px;
-    font-size: 11px;
+    padding: 10px 13px;
+    font-size: 13px;
     color: #6ee7b7;
     line-height: 1.6;
     margin-bottom: 8px;
     animation: apFadeIn 0.2s ease;
   }
-  .ap-step-explain-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #34d399; margin-bottom: 4px; opacity: 0.7; }
+  .ap-step-explain-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #34d399; margin-bottom: 4px; opacity: 0.7; }
 
   /* ===== INPUT ===== */
   .ap-input {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 7px;
-    padding: 6px 11px;
+    padding: 7px 12px;
     font-family: 'Space Mono', monospace;
-    font-size: 11px;
+    font-size: 13px;
     color: #e8e8f0;
     outline: none;
     transition: border-color 0.15s;
-    width: 110px;
+    width: 120px;
   }
   .ap-input:focus { border-color: rgba(167,139,250,0.5); }
   .ap-input::placeholder { color: #4a4a6a; }
-  .ap-input-label { font-size: 10px; color: #5a5a7a; white-space: nowrap; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .ap-input-label { font-size: 12px; color: #5a5a7a; white-space: nowrap; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
   /* ===== EMPTY STATE ===== */
   .ap-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #3a3a5a; gap: 10px; }
-  .ap-empty-text { font-size: 12px; font-family: 'Space Mono', monospace; }
+  .ap-empty-text { font-size: 13px; font-family: 'Space Mono', monospace; }
 
   /* ===== BADGE ===== */
-  .ap-badge { display: inline-flex; align-items: center; padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; font-family: 'Space Mono', monospace; }
+  .ap-badge { display: inline-flex; align-items: center; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; font-family: 'Space Mono', monospace; }
   .ap-badge-purple { background: rgba(167,139,250,0.2); color: #a78bfa; }
   .ap-badge-green { background: rgba(52,211,153,0.2); color: #34d399; }
   .ap-badge-blue { background: rgba(96,165,250,0.2); color: #60a5fa; }
@@ -839,8 +840,8 @@ const STYLES = `
     background: rgba(167,139,250,0.08);
     color: #a78bfa;
     border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 11px;
+    padding: 6px 12px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.15s;
@@ -1797,7 +1798,6 @@ function SortVisualizer({ algo }) {
         />
       )}
 
-      {/* User Array Input */}
       <ArrayInputRow
         onApply={(arr) => generateSteps(arr)}
         placeholder="e.g. 64 25 12 90 3 45"
@@ -1859,7 +1859,7 @@ function SortVisualizer({ algo }) {
           <span
             style={{
               fontFamily: "'Space Mono',monospace",
-              fontSize: 11,
+              fontSize: 13,
               color: "#a78bfa",
               minWidth: 20,
             }}
@@ -1914,7 +1914,6 @@ function SortVisualizer({ algo }) {
             ))}
           </div>
 
-          {/* Step explanation box */}
           {currentData?.explain && (
             <div className="ap-step-explain">
               <div className="ap-step-explain-label">💡 What's happening?</div>
@@ -1925,7 +1924,7 @@ function SortVisualizer({ algo }) {
           <div
             style={{
               display: "flex",
-              gap: 14,
+              gap: 16,
               flexWrap: "wrap",
               flexShrink: 0,
             }}
@@ -1942,15 +1941,15 @@ function SortVisualizer({ algo }) {
               >
                 <div
                   style={{
-                    width: 10,
-                    height: 10,
+                    width: 11,
+                    height: 11,
                     borderRadius: 2,
                     background: color,
                   }}
                 />
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     color: "#6060a0",
                     fontFamily: "'Space Mono',monospace",
                   }}
@@ -2137,7 +2136,6 @@ function BinarySearchVisualizer() {
         />
       )}
 
-      {/* Custom array input */}
       <ArrayInputRow
         onApply={handleCustomArray}
         placeholder="e.g. 3 8 12 25 31 50 88"
@@ -2239,8 +2237,9 @@ function BinarySearchVisualizer() {
                   : currentData.type === "notfound"
                     ? "Not Found"
                     : "Searching"}
-              </strong>{" "}
-              — {currentData.msg}
+              </strong>
+              {" — "}
+              {currentData.msg}
             </>
           ) : (
             <strong>Enter a target value to search, or click 🎲 Random</strong>
@@ -2279,7 +2278,7 @@ function BinarySearchVisualizer() {
                   display: "flex",
                   gap: 4,
                   alignItems: "center",
-                  fontSize: 11,
+                  fontSize: 13,
                   fontFamily: "'Space Mono',monospace",
                 }}
               >
@@ -2320,7 +2319,6 @@ function BinarySearchVisualizer() {
             </div>
           </div>
 
-          {/* Explanation box */}
           {currentData?.explain && (
             <div className="ap-step-explain">
               <div className="ap-step-explain-label">💡 What's happening?</div>
@@ -2521,10 +2519,10 @@ function GraphVisualizer({ algo }) {
               background: "rgba(255,255,255,0.05)",
               border: "1px solid rgba(255,255,255,0.1)",
               borderRadius: 7,
-              padding: "6px 10px",
+              padding: "7px 11px",
               color: "#e8e8f0",
               fontFamily: "'Space Mono',monospace",
-              fontSize: 11,
+              fontSize: 13,
             }}
           >
             {Object.entries(GRAPH_NODES).map(([id, n]) => (
@@ -2623,8 +2621,8 @@ function GraphVisualizer({ algo }) {
                 const na = GRAPH_NODES[a],
                   nb = GRAPH_NODES[b];
                 const x1 = na.x * svgSize.w,
-                  y1 = na.y * svgSize.h,
-                  x2 = nb.x * svgSize.w,
+                  y1 = na.y * svgSize.h;
+                const x2 = nb.x * svgSize.w,
                   y2 = nb.y * svgSize.h;
                 return (
                   <line
@@ -2646,11 +2644,11 @@ function GraphVisualizer({ algo }) {
                     className={`ap-graph-node ${getNodeState(Number(id))}`}
                     transform={`translate(${x},${y})`}
                   >
-                    <circle r={20} />
+                    <circle r={22} />
                     <text
                       textAnchor="middle"
                       dominantBaseline="central"
-                      fontSize={13}
+                      fontSize={14}
                     >
                       {node.label}
                     </text>
@@ -2660,7 +2658,6 @@ function GraphVisualizer({ algo }) {
             </svg>
           </div>
 
-          {/* Queue/Stack display */}
           <div className="ap-queue-display">
             <span className="ap-queue-label">{queueLabel}:</span>
             {!queueOrStack || queueOrStack.length === 0 ? (
@@ -2677,7 +2674,6 @@ function GraphVisualizer({ algo }) {
             )}
           </div>
 
-          {/* Visited order */}
           {currentData && currentData.visited?.size > 0 && (
             <div
               style={{
@@ -2690,7 +2686,7 @@ function GraphVisualizer({ algo }) {
             >
               <span
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   color: "#5a5a7a",
                   fontFamily: "'Space Mono',monospace",
                   textTransform: "uppercase",
@@ -2715,7 +2711,6 @@ function GraphVisualizer({ algo }) {
             </div>
           )}
 
-          {/* Step explanation box */}
           {currentData?.explain && (
             <div className="ap-step-explain">
               <div className="ap-step-explain-label">💡 What's happening?</div>
